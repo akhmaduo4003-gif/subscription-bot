@@ -13,29 +13,31 @@ dp = Dispatcher()
 DB = "users.db"
 
 PRACTICES = [
-    "Breathing 4-7-8:\nVdoh 4 sek, zaderzhka 7, vydoh 8.\nPovtori 3 raza. Trevoга uhodit.",
-    "Zapishi 3 veshi za kotorye ty blagodaren pryamo seychas.\nDazhe melochi schitayutsya.",
-    "Tehnika 5-4-3-2-1:\nNazovi 5 veshey kotorye vidish\n4 zvuka kotorye slyshish\n3 veshi kotoryh mozhesh kosnutsya\n2 zapaha\n1 vkus\nTy zdes. Ty v bezopasnosti.",
-    "Vstani i sdelai 10 medlennyh shagov.\nFokus tolko na oshushheniyah v nogah.\nMysli utihnut sami.",
-    "Napiши chto tebya seychas trevozhit.\nRyadom napishi odno deystvie kotorое ty mozhesh sdelat pryamo seychas.",
-    "Kvadratnoe dyhanie:\nVdoh 4, zaderzhka 4, vydoh 4, zaderzhka 4.\nPovtori 4 raza.",
-    "Posmotri v okno ili vokrug.\nNaydi 3 krasivye veshi.\nMozg perehodit iz rezhima ugrozy v rezhim nablyudeniya.",
+    "🌬 Дыхание 4-7-8:\nВдох 4 сек, задержка 7, выдох 8.\nПовтори 3 раза. Тревога уходит.",
+    "✍️ Запиши 3 вещи за которые ты благодарен прямо сейчас.\nДаже мелочи считаются.",
+    "🧘 Техника 5-4-3-2-1:\n5 вещей которые видишь\n4 звука которые слышишь\n3 вещи которых можешь коснуться\n2 запаха\n1 вкус\n\nТы здесь. Ты в безопасности.",
+    "🚶 Встань и сделай 10 медленных шагов.\nФокус только на ощущениях в ногах.\nМысли утихнут сами.",
+    "😮‍💨 Квадратное дыхание:\nВдох 4, задержка 4, выдох 4, задержка 4.\nПовтори 4 раза.",
+    "📝 Напиши что тебя сейчас тревожит.\nРядом напиши одно действие которое ты можешь сделать прямо сейчас.",
+    "👀 Посмотри вокруг и найди 3 красивые вещи.\nМозг переходит из режима угрозы в режим наблюдения.",
 ]
 
 REFLECTIONS = [
-    "Chto segodnya zabрало u tebya bolshe vsego energii?",
-    "Kakoy moment segodnya byl samym zhivym i nastoyashim?",
-    "Chto ty sdelal segodnya dlya sebya — ne dlya raboty, ne dlya drugih?",
-    "Esli by den povtorilsya — chto by ty izmenil?",
-    "Chto tebya poradovalo segodnya, dazhe meloch?",
-    "Kakie mysli segodnya zabotali тебя bolshe vsego?",
-    "Chto ty hotel skazat komy-to, no ne skazal?",
+    "Что сегодня забрало у тебя больше всего энергии?",
+    "Какой момент сегодня был самым живым и настоящим?",
+    "Что ты сделал для себя сегодня — не для работы, не для других?",
+    "Если бы день повторился — что бы ты изменил?",
+    "Что тебя порадовало сегодня, даже мелочь?",
+    "Какие мысли сегодня забирали больше всего сил?",
+    "Что ты хотел сказать кому-то, но не сказал?",
 ]
 
 LESSONS = [
-    "UROK 1: Trevoга\n\nTrevoga — eto ne slabost. Eto signal mozga o vozmozhnoy ugroze.\n\nProblema v tom chto mozg ne razlichaet realnuyu ugrozu ot voображаемой.\n\nChto delat:\n1. Zameti trevogu bez osuzhdenie\n2. Sprosi sebya: eta ugroza realna pryamo seychas?\n3. Dyshy medlenno — eto signal bezopasnosti dlya mozga\n4. Deystvuy — dazhe malen'koe deystvie snimaet trevogu",
-    "UROK 2: Granitsy\n\nGranitsa — eto ne stena. Eto dver kotoruyu otkryvaesh ty.\n\nPochemu tyazhelo govorit net:\n— Nas uchili chto otkaz = egoizm\n— My boymsya poteryat otnosheniya\n— Nam nuzhno odobrenie drugih\n\nNo bez granits ty teryaesh sebya.\n\nNachni s malogo: otkazhi v odnom malom dele segodnya.",
-    "UROK 3: Vygoranie\n\nVygoranie — eto kogda ty tak dolgo daval drugim chto zabyl davat sebe.\n\nSimptomy:\n— Vse razdrazhaet\n— Net sil dazhe na to chto ranше nravilos\n— Oshushenie pustoty\n\nVyход:\n1. Ostanovis\n2. Spрosi: chto mne seychas nuzhno?\n3. Day sebe eto bez viny",
+    "🧠 УРОК 1: Тревога\n\nТревога — это не слабость.\nЭто сигнал мозга о возможной угрозе.\n\nПроблема в том что мозг не различает реальную угрозу от воображаемой.\n\nЧто делать:\n1. Замети тревогу без осуждения\n2. Спроси: эта угроза реальна прямо сейчас?\n3. Дыши медленно\n4. Сделай одно маленькое действие",
+    "🚪 УРОК 2: Границы\n\nГраница — это дверь которую открываешь ты.\n\nПочему тяжело говорить нет:\n— Боимся потерять отношения\n— Нам нужно одобрение других\n\nНо без границ ты теряешь себя.\n\nНачни с малого: откажи в одном маленьком деле сегодня.",
+    "🕯 УРОК 3: Выгорание\n\nВыгорание — когда ты так долго давал другим\nчто забыл давать себе.\n\nСимптомы:\n— Всё раздражает\n— Нет сил даже на любимое\n— Пустота\n\nВыход: остановись и спроси — что мне сейчас нужно?",
+    "💭 УРОК 4: Внутренний критик\n\nТот голос который говорит ты недостаточно хорош — это не правда.\n\nЭто усвоенные чужие слова из прошлого.\n\nКогда слышишь критика — спроси:\nЯ бы сказал это другу?\n\nЕсли нет — не говори себе.",
+    "💙 УРОК 5: Самосострадание\n\nТы не обязан быть продуктивным каждый день.\nТы не обязан всегда быть в ресурсе.\n\nОтносись к себе как к другу которому плохо.\nС теплом. Без осуждения.\n\nЭто не слабость — это сила.",
 ]
 
 async def init_db():
@@ -70,134 +72,98 @@ async def add_subscriber(user_id: int, days: int = 30):
 
 def sub_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="Subscribe 30 days - 50 Stars", callback_data="subscribe")
+        InlineKeyboardButton(text="⭐ Подписка 30 дней — 450 Stars", callback_data="subscribe")
     ]])
 
 def menu_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Practice", callback_data="practice"),
-         InlineKeyboardButton(text="Reflection", callback_data="reflection")],
-        [InlineKeyboardButton(text="Crisis help", callback_data="crisis"),
-         InlineKeyboardButton(text="Lesson", callback_data="lesson")],
-        [InlineKeyboardButton(text="Status", callback_data="status")]
+        [InlineKeyboardButton(text="💡 Практика", callback_data="practice"),
+         InlineKeyboardButton(text="🌙 Рефлексия", callback_data="reflection")],
+        [InlineKeyboardButton(text="🌪 Помощь при тревоге", callback_data="crisis"),
+         InlineKeyboardButton(text="🧠 Урок", callback_data="lesson")],
+        [InlineKeyboardButton(text="✅ Мой статус", callback_data="status")]
     ])
 
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
     await message.answer(
-        "Psychology in Pocket\n\n"
-        "Daily practices for anxiety, burnout and self-development.\n\n"
-        "What you get with subscription:\n"
-        "- Daily practice\n"
-        "- Evening reflection question\n"
-        "- Crisis help techniques\n"
-        "- Weekly psychology lessons\n\n"
-        "50 Stars per month",
+        "🧠 Психология в кармане\n\n"
+        "Ежедневные практики от тревоги, выгорания и для саморазвития.\n\n"
+        "С подпиской ты получаешь:\n"
+        "🔹 Ежедневная практика\n"
+        "🔹 Вечерний вопрос для рефлексии\n"
+        "🔹 Помощь при тревоге\n"
+        "🔹 Уроки по психологии\n\n"
+        "450 Stars в месяц 👇",
         reply_markup=sub_keyboard()
     )
 
 @dp.callback_query(F.data == "practice")
-@dp.message(Command("practice"))
-async def cmd_practice(update):
-    user_id = update.from_user.id
-    if not await is_subscribed(user_id):
-        if hasattr(update, 'message'):
-            await update.message.answer("Subscribers only.", reply_markup=sub_keyboard())
-        else:
-            await update.answer("Subscribers only.", reply_markup=sub_keyboard(), show_alert=True)
+async def cb_practice(callback):
+    if not await is_subscribed(callback.from_user.id):
+        await callback.answer("Только для подписчиков", show_alert=True)
         return
-    text = "Practice of the day:\n\n" + random.choice(PRACTICES)
-    if hasattr(update, 'message'):
-        await update.message.answer(text, reply_markup=menu_keyboard())
-    else:
-        await update.message.answer(text, reply_markup=menu_keyboard())
+    await callback.message.answer("💡 Практика дня:\n\n" + random.choice(PRACTICES), reply_markup=menu_keyboard())
+    await callback.answer()
 
 @dp.callback_query(F.data == "reflection")
-@dp.message(Command("reflection"))
-async def cmd_reflection(update):
-    user_id = update.from_user.id
-    if not await is_subscribed(user_id):
-        if hasattr(update, 'message'):
-            await update.message.answer("Subscribers only.", reply_markup=sub_keyboard())
-        else:
-            await update.answer("Subscribers only.", show_alert=True)
+async def cb_reflection(callback):
+    if not await is_subscribed(callback.from_user.id):
+        await callback.answer("Только для подписчиков", show_alert=True)
         return
-    text = "Evening reflection:\n\n" + random.choice(REFLECTIONS)
-    if hasattr(update, 'message'):
-        await update.message.answer(text, reply_markup=menu_keyboard())
-    else:
-        await update.message.answer(text, reply_markup=menu_keyboard())
+    await callback.message.answer("🌙 Вечерний вопрос:\n\n" + random.choice(REFLECTIONS), reply_markup=menu_keyboard())
+    await callback.answer()
 
 @dp.callback_query(F.data == "crisis")
-@dp.message(Command("crisis"))
-async def cmd_crisis(update):
-    user_id = update.from_user.id
-    if not await is_subscribed(user_id):
-        if hasattr(update, 'message'):
-            await update.message.answer("Subscribers only.", reply_markup=sub_keyboard())
-        else:
-            await update.answer("Subscribers only.", show_alert=True)
+async def cb_crisis(callback):
+    if not await is_subscribed(callback.from_user.id):
+        await callback.answer("Только для подписчиков", show_alert=True)
         return
-    text = (
-        "Crisis help:\n\n"
-        "1. Breathe in — 4 seconds\n"
-        "2. Hold — 4 seconds\n"
-        "3. Breathe out — 6 seconds\n"
-        "Repeat 5 times.\n\n"
-        "Then name out loud:\n"
-        "5 things you see\n"
-        "4 sounds you hear\n"
-        "3 things you can touch\n\n"
-        "You are safe. You will be okay."
+    await callback.message.answer(
+        "🌪 Помощь при тревоге:\n\n"
+        "1. Вдох — 4 секунды\n"
+        "2. Задержка — 4 секунды\n"
+        "3. Выдох — 6 секунд\n"
+        "Повтори 5 раз.\n\n"
+        "Затем назови вслух:\n"
+        "5 вещей которые видишь\n"
+        "4 звука которые слышишь\n"
+        "3 вещи которых можешь коснуться\n\n"
+        "Ты в безопасности. Ты справишься. 💙",
+        reply_markup=menu_keyboard()
     )
-    if hasattr(update, 'message'):
-        await update.message.answer(text, reply_markup=menu_keyboard())
-    else:
-        await update.message.answer(text, reply_markup=menu_keyboard())
+    await callback.answer()
 
 @dp.callback_query(F.data == "lesson")
-@dp.message(Command("lesson"))
-async def cmd_lesson(update):
-    user_id = update.from_user.id
-    if not await is_subscribed(user_id):
-        if hasattr(update, 'message'):
-            await update.message.answer("Subscribers only.", reply_markup=sub_keyboard())
-        else:
-            await update.answer("Subscribers only.", show_alert=True)
+async def cb_lesson(callback):
+    if not await is_subscribed(callback.from_user.id):
+        await callback.answer("Только для подписчиков", show_alert=True)
         return
-    text = random.choice(LESSONS)
-    if hasattr(update, 'message'):
-        await update.message.answer(text, reply_markup=menu_keyboard())
-    else:
-        await update.message.answer(text, reply_markup=menu_keyboard())
+    await callback.message.answer(random.choice(LESSONS), reply_markup=menu_keyboard())
+    await callback.answer()
 
 @dp.callback_query(F.data == "status")
-@dp.message(Command("status"))
-async def cmd_status(update):
-    user_id = update.from_user.id
-    if await is_subscribed(user_id):
+async def cb_status(callback):
+    if await is_subscribed(callback.from_user.id):
         async with aiosqlite.connect(DB) as db:
-            async with db.execute("SELECT expires_at FROM subscribers WHERE user_id = ?", (user_id,)) as cursor:
+            async with db.execute("SELECT expires_at FROM subscribers WHERE user_id = ?", (callback.from_user.id,)) as cursor:
                 row = await cursor.fetchone()
                 exp = datetime.fromisoformat(row[0]).strftime("%d.%m.%Y")
-        text = f"Subscription active until {exp}"
+        await callback.message.answer(f"✅ Подписка активна до {exp}", reply_markup=menu_keyboard())
     else:
-        text = "No active subscription."
-    if hasattr(update, 'message'):
-        await update.message.answer(text, reply_markup=sub_keyboard() if not await is_subscribed(user_id) else menu_keyboard())
-    else:
-        await update.message.answer(text)
+        await callback.message.answer("❌ Нет активной подписки.", reply_markup=sub_keyboard())
+    await callback.answer()
 
 @dp.callback_query(F.data == "subscribe")
 async def send_invoice(callback):
     await bot.send_invoice(
         chat_id=callback.from_user.id,
-        title="Psychology in Pocket - 30 days",
-        description="Daily practices, crisis help, reflection and psychology lessons",
+        title="Психология в кармане — 30 дней",
+        description="Ежедневные практики, помощь при тревоге и уроки психологии",
         payload="sub_30d",
         provider_token="",
         currency="XTR",
-        prices=[LabeledPrice(label="Subscription", amount=50)],
+        prices=[LabeledPrice(label="Подписка", amount=450)],
         start_parameter="sub"
     )
     await callback.answer()
@@ -210,7 +176,7 @@ async def pre_checkout(query: PreCheckoutQuery):
 async def payment_done(message: Message):
     await add_subscriber(message.from_user.id, days=30)
     await message.answer(
-        "Payment successful! Subscription active for 30 days.\n\nChoose what to do:",
+        "🎉 Оплата прошла! Подписка активна 30 дней.\n\nВыбери что делать:",
         reply_markup=menu_keyboard()
     )
 
