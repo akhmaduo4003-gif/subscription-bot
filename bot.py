@@ -6,15 +6,17 @@ from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, InlineKeyboar
 from aiogram.filters import Command
 from dotenv import load_dotenv
 import os, random
+import anthropic
 
 load_dotenv()
 bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher()
 DB = "users.db"
+claude = anthropic.Anthropic(api_key=os.getenv("CLAUDE_API_KEY"))
 
 CONTENT = {
     "ru": {
-        "start": "🧠 Психология в кармане\n\nЕжедневные практики от тревоги, выгорания и для саморазвития.\n\nС подпиской ты получаешь:\n🔹 Ежедневная практика\n🔹 Вечерний вопрос для рефлексии\n🔹 Помощь при тревоге\n🔹 Уроки по психологии\n\n450 Stars в месяц 👇",
+        "start": "🧠 Психология в кармане\n\nЕжедневные практики от тревоги, выгорания и для саморазвития.\n\nС подпиской ты получаешь:\n🔹 Ежедневная практика\n🔹 Вечерний вопрос для рефлексии\n🔹 Помощь при тревоге\n🔹 Уроки по психологии\n🔹 Личный AI-психолог\n\n450 Stars в месяц 👇",
         "sub_btn": "⭐ Подписка 30 дней — 450 Stars",
         "only_subs": "Только для подписчиков",
         "practice_title": "💡 Практика дня:\n\n",
@@ -26,6 +28,8 @@ CONTENT = {
         "invoice_title": "Психология в кармане — 30 дней",
         "invoice_desc": "Ежедневные практики, помощь при тревоге и уроки психологии",
         "menu": ["💡 Практика", "🌙 Рефлексия", "🌪 Помощь при тревоге", "🧠 Урок", "✅ Мой статус"],
+        "ai_thinking": "🤔 Думаю...",
+        "ai_nosub": "💬 Личный AI-психолог доступен только подписчикам.\n\nОформи подписку чтобы получить поддержку:",
         "crisis": "🌪 Помощь при тревоге:\n\n1. Вдох — 4 секунды\n2. Задержка — 4 секунды\n3. Выдох — 6 секунд\nПовтори 5 раз.\n\nЗатем назови вслух:\n5 вещей которые видишь\n4 звука которые слышишь\n3 вещи которых можешь коснуться\n\nТы в безопасности. Ты справишься. 💙",
         "practices": [
             "🌬 Дыхание 4-7-8:\nВдох 4 сек, задержка 7, выдох 8.\nПовтори 3 раза. Тревога уходит.",
@@ -35,6 +39,13 @@ CONTENT = {
             "😮‍💨 Квадратное дыхание:\nВдох 4, задержка 4, выдох 4, задержка 4.\nПовтори 4 раза.",
             "📝 Напиши что тебя сейчас тревожит.\nРядом напиши одно действие которое ты можешь сделать прямо сейчас.",
             "👀 Посмотри вокруг и найди 3 красивые вещи.\nМозг переходит из режима угрозы в режим наблюдения.",
+            "💪 Прогрессивная релаксация:\nНапряги кулаки на 5 секунд — отпусти.\nПлечи вверх на 5 секунд — отпусти.\nПочувствуй разницу.",
+            "🎵 Включи любимую музыку и просто слушай 5 минут.\nНе делай ничего другого. Только музыка.",
+            "🌿 Выйди на воздух на 5 минут.\nСмотри на небо. Дыши медленно.\nПрирода снижает кортизол.",
+            "💧 Выпей стакан воды медленно.\nФокусируйся на каждом глотке.\nЭто простой якорь в настоящий момент.",
+            "🤲 Положи руку на сердце.\nПочувствуй как оно бьётся.\nСкажи себе: я справляюсь.",
+            "📖 Напиши 3 предложения о том как ты себя чувствуешь.\nБез оценок. Просто факты.",
+            "🌅 Вспомни момент когда тебе было хорошо.\nДержи его в голове 30 секунд.\nМозг не отличает воспоминание от реальности.",
         ],
         "reflections": [
             "Что сегодня забрало у тебя больше всего энергии?",
@@ -44,17 +55,37 @@ CONTENT = {
             "Что тебя порадовало сегодня, даже мелочь?",
             "Какие мысли сегодня забирали больше всего сил?",
             "Что ты хотел сказать кому-то, но не сказал?",
+            "Чему ты сегодня научился — о себе или о мире?",
+            "Что ты сделал сегодня впервые?",
+            "Кому ты сегодня был благодарен, даже молча?",
+            "Что тебя удивило сегодня?",
+            "Что ты откладывал и почему?",
+            "Где ты сегодня был честен с собой?",
+            "Что дало тебе энергию сегодня?",
         ],
         "lessons": [
-            "🧠 УРОК 1: Тревога\n\nТревога — это не слабость.\nЭто сигнал мозга о возможной угрозе.\n\nЧто делать:\n1. Замети тревогу без осуждения\n2. Спроси: эта угроза реальна прямо сейчас?\n3. Дыши медленно\n4. Сделай одно маленькое действие",
+            "🧠 УРОК 1: Тревога\n\nТревога — это не слабость.\nЭто сигнал мозга о возможной угрозе.\n\nПроблема в том что мозг не различает реальную угрозу от воображаемой.\n\nЧто делать:\n1. Замети тревогу без осуждения\n2. Спроси: эта угроза реальна прямо сейчас?\n3. Дыши медленно\n4. Сделай одно маленькое действие",
             "🚪 УРОК 2: Границы\n\nГраница — это дверь которую открываешь ты.\n\nПочему тяжело говорить нет:\n— Боимся потерять отношения\n— Нам нужно одобрение других\n\nНачни с малого: откажи в одном деле сегодня.",
             "🕯 УРОК 3: Выгорание\n\nВыгорание — когда ты так долго давал другим что забыл давать себе.\n\nСимптомы:\n— Всё раздражает\n— Нет сил даже на любимое\n— Пустота\n\nВыход: остановись и спроси — что мне сейчас нужно?",
             "💭 УРОК 4: Внутренний критик\n\nТот голос который говорит ты недостаточно хорош — это не правда.\n\nКогда слышишь критика — спроси:\nЯ бы сказал это другу?\n\nЕсли нет — не говори себе.",
             "💙 УРОК 5: Самосострадание\n\nТы не обязан быть продуктивным каждый день.\nОтносись к себе как к другу которому плохо.\nС теплом. Без осуждения.",
+            "😤 УРОК 6: Злость\n\nЗлость — это нормальная эмоция.\nОна говорит что твои границы нарушены.\n\nЧто делать со злостью:\n1. Признай её — я злюсь и это нормально\n2. Найди причину — что именно нарушено?\n3. Вырази безопасно — спорт, письмо, разговор",
+            "😔 УРОК 7: Грусть\n\nГрусть не надо заглушать.\nОна приходит когда мы потеряли что-то важное.\n\nПозволь себе погрустить.\nЭто не слабость — это честность с собой.\n\nГрусть проходит быстрее когда её не подавляют.",
+            "🔄 УРОК 8: Привычки\n\nМозг любит автоматизм.\n20 дней — формируется привычка.\n66 дней — она становится автоматической.\n\nХочешь изменить жизнь — измени одну маленькую привычку.\nНе десять. Одну.",
+            "🛌 УРОК 9: Сон и психика\n\nНедосып — главная причина тревоги и раздражительности.\n\n7-9 часов сна = стабильная психика.\n\nЛайфхак: ложись в одно время каждый день.\nМозг начнёт засыпать автоматически через 2 недели.",
+            "🤝 УРОК 10: Отношения\n\nЗдоровые отношения строятся на трёх вещах:\n1. Безопасность — можно быть собой\n2. Уважение — границы соблюдаются\n3. Поддержка — рядом в трудный момент\n\nЕсли одного нет — стоит поговорить.",
+        ],
+        "crisis_list": [
+            "🌪 Дыхание:\n\n1. Вдох — 4 секунды\n2. Задержка — 4 секунды\n3. Выдох — 6 секунд\nПовтори 5 раз.\n\nТы в безопасности. 💙",
+            "🧊 Техника холода:\nВозьми что-то холодное в руки.\nЛёд, холодная вода, металл.\nФокус на ощущении — мозг переключается.",
+            "🏃 Физический сброс:\nПрыгни 10 раз.\nИли отожмись.\nИли потряси руками.\nТело сбрасывает адреналин через движение.",
+            "💬 Назови эмоцию:\nСкажи вслух: я чувствую тревогу.\nНазывание эмоции снижает её интенсивность на 30%.\nЭто доказано нейронауками.",
+            "🌿 Заземление:\nПочувствуй ноги на полу.\nСпина на стуле.\nРуки на коленях.\nТы здесь. Ты реален. Ты в безопасности.",
+            "👁 Техника 5-4-3-2-1:\n5 вещей которые видишь\n4 звука которые слышишь\n3 вещи которых можешь коснуться\n2 запаха\n1 вкус\n\nТревога отступает.",
         ],
     },
     "en": {
-        "start": "🧠 Psychology in Pocket\n\nDaily practices for anxiety, burnout and self-development.\n\nWith subscription you get:\n🔹 Daily practice\n🔹 Evening reflection question\n🔹 Crisis help\n🔹 Psychology lessons\n\n450 Stars per month 👇",
+        "start": "🧠 Psychology in Pocket\n\nDaily practices for anxiety, burnout and self-development.\n\nWith subscription you get:\n🔹 Daily practice\n🔹 Evening reflection question\n🔹 Crisis help\n🔹 Psychology lessons\n🔹 Personal AI psychologist\n\n450 Stars per month 👇",
         "sub_btn": "⭐ Subscribe 30 days — 450 Stars",
         "only_subs": "Subscribers only",
         "practice_title": "💡 Practice of the day:\n\n",
@@ -66,15 +97,22 @@ CONTENT = {
         "invoice_title": "Psychology in Pocket — 30 days",
         "invoice_desc": "Daily practices, crisis help and psychology lessons",
         "menu": ["💡 Practice", "🌙 Reflection", "🌪 Crisis help", "🧠 Lesson", "✅ My status"],
+        "ai_thinking": "🤔 Thinking...",
+        "ai_nosub": "💬 Personal AI psychologist is available for subscribers only.\n\nGet a subscription to receive support:",
         "crisis": "🌪 Crisis help:\n\n1. Breathe in — 4 seconds\n2. Hold — 4 seconds\n3. Breathe out — 6 seconds\nRepeat 5 times.\n\nThen name out loud:\n5 things you see\n4 sounds you hear\n3 things you can touch\n\nYou are safe. You will be okay. 💙",
         "practices": [
-            "🌬 Breathing 4-7-8:\nInhale 4 sec, hold 7, exhale 8.\nRepeat 3 times. Anxiety fades.",
+            "🌬 Breathing 4-7-8:\nInhale 4 sec, hold 7, exhale 8.\nRepeat 3 times.",
             "✍️ Write 3 things you are grateful for right now.\nEven small things count.",
             "🧘 Technique 5-4-3-2-1:\n5 things you see\n4 sounds you hear\n3 things you can touch\n2 smells\n1 taste\n\nYou are here. You are safe.",
-            "🚶 Stand up and take 10 slow steps.\nFocus only on the sensations in your feet.\nThoughts will quiet down.",
+            "🚶 Stand up and take 10 slow steps.\nFocus only on sensations in your feet.",
             "😮‍💨 Box breathing:\nInhale 4, hold 4, exhale 4, hold 4.\nRepeat 4 times.",
             "📝 Write what worries you right now.\nNext to it write one action you can take right now.",
             "👀 Look around and find 3 beautiful things.\nYour brain shifts from threat mode to observation mode.",
+            "💪 Progressive relaxation:\nClench fists for 5 seconds — release.\nShoulders up for 5 seconds — release.\nFeel the difference.",
+            "🎵 Play your favorite music and just listen for 5 minutes.\nDo nothing else. Just music.",
+            "🌿 Go outside for 5 minutes.\nLook at the sky. Breathe slowly.",
+            "💧 Drink a glass of water slowly.\nFocus on each sip.\nA simple anchor to the present moment.",
+            "🤲 Place your hand on your heart.\nFeel it beating.\nSay to yourself: I am managing.",
         ],
         "reflections": [
             "What took the most energy from you today?",
@@ -84,6 +122,9 @@ CONTENT = {
             "What made you happy today, even a small thing?",
             "Which thoughts took the most energy today?",
             "What did you want to say to someone but didn't?",
+            "What did you learn today — about yourself or the world?",
+            "What did you do today for the first time?",
+            "Who were you grateful for today, even silently?",
         ],
         "lessons": [
             "🧠 LESSON 1: Anxiety\n\nAnxiety is not weakness.\nIt's your brain signaling a possible threat.\n\nWhat to do:\n1. Notice anxiety without judgment\n2. Ask: is this threat real right now?\n3. Breathe slowly\n4. Take one small action",
@@ -91,6 +132,16 @@ CONTENT = {
             "🕯 LESSON 3: Burnout\n\nBurnout is when you gave so much to others that you forgot to give to yourself.\n\nSymptoms:\n— Everything irritates\n— No energy even for what you love\n— Emptiness\n\nSolution: stop and ask — what do I need right now?",
             "💭 LESSON 4: Inner critic\n\nThat voice saying you are not good enough — it's not true.\n\nWhen you hear the critic — ask:\nWould I say this to a friend?\n\nIf not — don't say it to yourself.",
             "💙 LESSON 5: Self-compassion\n\nYou don't have to be productive every day.\nTreat yourself like a friend who is struggling.\nWith warmth. Without judgment.",
+            "😤 LESSON 6: Anger\n\nAnger is a normal emotion.\nIt tells you your boundaries were violated.\n\nWhat to do:\n1. Acknowledge it — I am angry and that's okay\n2. Find the cause — what was violated?\n3. Express safely — exercise, writing, conversation",
+            "😔 LESSON 7: Sadness\n\nDon't suppress sadness.\nIt comes when we lose something important.\n\nAllow yourself to be sad.\nSadness passes faster when you don't suppress it.",
+            "🔄 LESSON 8: Habits\n\nThe brain loves automation.\n20 days — a habit forms.\n66 days — it becomes automatic.\n\nWant to change your life — change one small habit.\nNot ten. One.",
+        ],
+        "crisis_list": [
+            "🌪 Breathing:\n\n1. Breathe in — 4 seconds\n2. Hold — 4 seconds\n3. Breathe out — 6 seconds\nRepeat 5 times.\n\nYou are safe. 💙",
+            "🧊 Cold technique:\nHold something cold in your hands.\nIce, cold water, metal.\nFocus on the sensation.",
+            "🏃 Physical reset:\nJump 10 times.\nOr do pushups.\nOr shake your hands.\nThe body releases adrenaline through movement.",
+            "💬 Name the emotion:\nSay out loud: I feel anxious.\nNaming an emotion reduces its intensity by 30%.",
+            "🌿 Grounding:\nFeel your feet on the floor.\nBack on the chair.\nHands on your knees.\nYou are here. You are real. You are safe.",
         ],
     }
 }
@@ -173,6 +224,7 @@ async def cmd_start(message: Message):
         "🌍 Choose your language / Выбери язык:",
         reply_markup=lang_keyboard()
     )
+
 @dp.message(Command("adduser"))
 async def cmd_adduser(message: Message):
     if message.from_user.id != 1001401247:
@@ -220,7 +272,7 @@ async def cb_crisis(callback: CallbackQuery):
     if not await is_subscribed(callback.from_user.id):
         await callback.answer(c["only_subs"], show_alert=True)
         return
-    await callback.message.answer(c["crisis"], reply_markup=menu_keyboard(lang))
+    await callback.message.answer(random.choice(c["crisis_list"]), reply_markup=menu_keyboard(lang))
     await callback.answer()
 
 @dp.callback_query(F.data == "lesson")
@@ -242,16 +294,10 @@ async def cb_lesson(callback: CallbackQuery):
     total = len(c["lessons"])
     if lang == "ru":
         header = f"📚 Урок {lesson_index + 1} из {total}\n\n"
-        if lesson_index + 1 < total:
-            footer = f"\n\n⏳ Следующий урок откроется завтра."
-        else:
-            footer = "\n\n✅ Ты прошёл все уроки!"
+        footer = f"\n\n⏳ Следующий урок завтра." if lesson_index + 1 < total else "\n\n✅ Ты прошёл все уроки!"
     else:
         header = f"📚 Lesson {lesson_index + 1} of {total}\n\n"
-        if lesson_index + 1 < total:
-            footer = f"\n\n⏳ Next lesson unlocks tomorrow."
-        else:
-            footer = "\n\n✅ You completed all lessons!"
+        footer = f"\n\n⏳ Next lesson tomorrow." if lesson_index + 1 < total else "\n\n✅ You completed all lessons!"
     await callback.message.answer(header + lesson + footer, reply_markup=menu_keyboard(lang))
     await callback.answer()
 
@@ -295,6 +341,44 @@ async def payment_done(message: Message):
     c = CONTENT[lang]
     await add_subscriber(message.from_user.id, days=30)
     await message.answer(c["paid"], reply_markup=menu_keyboard(lang))
+
+@dp.message(F.text)
+async def handle_text(message: Message):
+    user_id = message.from_user.id
+    lang = await get_lang(user_id)
+    c = CONTENT[lang]
+    if not await is_subscribed(user_id):
+        await message.answer(c["ai_nosub"], reply_markup=sub_keyboard(lang))
+        return
+    thinking = await message.answer(c["ai_thinking"])
+    try:
+        system = (
+            "Ты тёплый и поддерживающий психолог-ассистент. "
+            "Отвечай коротко — максимум 3-4 абзаца. "
+            "Не ставь диагнозы. Не давай медицинских советов. "
+            "Помогай человеку разобраться в своих чувствах и найти практические шаги. "
+            "Отвечай на том же языке на котором пишет пользователь."
+        ) if lang == "ru" else (
+            "You are a warm and supportive psychology assistant. "
+            "Reply briefly — maximum 3-4 paragraphs. "
+            "Do not diagnose. Do not give medical advice. "
+            "Help the person understand their feelings and find practical steps. "
+            "Always reply in the same language the user writes in."
+        )
+        response = claude.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=500,
+            system=system,
+            messages=[{"role": "user", "content": message.text}]
+        )
+        await thinking.delete()
+        await message.answer(response.content[0].text, reply_markup=menu_keyboard(lang))
+    except Exception as e:
+        await thinking.delete()
+        if lang == "ru":
+            await message.answer("Что-то пошло не так. Попробуй ещё раз.", reply_markup=menu_keyboard(lang))
+        else:
+            await message.answer("Something went wrong. Please try again.", reply_markup=menu_keyboard(lang))
 
 async def main():
     await init_db()
