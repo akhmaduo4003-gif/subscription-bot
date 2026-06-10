@@ -351,26 +351,20 @@ async def handle_text(message: Message):
         await message.answer(c["ai_nosub"], reply_markup=sub_keyboard(lang))
         return
     thinking = await message.answer(c["ai_thinking"])
+    system = (
+        "Ты тёплый и поддерживающий психолог-ассистент. "
+        "Отвечай коротко — максимум 3-4 абзаца. "
+        "Не ставь диагнозы. Не давай медицинских советов. "
+        "Помогай человеку разобраться в своих чувствах и найти практические шаги. "
+        "Отвечай на том же языке на котором пишет пользователь."
+    )
     try:
-        system = (
-            "Ты тёплый и поддерживающий психолог-ассистент. "
-            "Отвечай коротко — максимум 3-4 абзаца. "
-            "Не ставь диагнозы. Не давай медицинских советов. "
-            "Помогай человеку разобраться в своих чувствах и найти практические шаги. "
-            "Отвечай на том же языке на котором пишет пользователь."
-        ) if lang == "ru" else (
-            "You are a warm and supportive psychology assistant. "
-            "Reply briefly — maximum 3-4 paragraphs. "
-            "Do not diagnose. Do not give medical advice. "
-            "Help the person understand their feelings and find practical steps. "
-            "Always reply in the same language the user writes in."
-        )
         response = gemini.models.generate_content(
-    model="gemini-2.0-flash",
-    contents=system + "\n\n" + message.text
-)
-await thinking.delete()
-await message.answer(response.text, reply_markup=menu_keyboard(lang))
+            model="gemini-2.0-flash",
+            contents=system + "\n\n" + message.text
+        )
+        await thinking.delete()
+        await message.answer(response.text, reply_markup=menu_keyboard(lang))
     except Exception as e:
         await thinking.delete()
         if lang == "ru":
