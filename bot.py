@@ -173,6 +173,17 @@ async def cmd_start(message: Message):
         "🌍 Choose your language / Выбери язык:",
         reply_markup=lang_keyboard()
     )
+@dp.message(Command("adduser"))
+async def cmd_adduser(message: Message):
+    if message.from_user.id != 1001401247:
+        return
+    parts = message.text.split()
+    if len(parts) != 2:
+        await message.answer("Usage: /adduser ID")
+        return
+    user_id = int(parts[1])
+    await add_subscriber(user_id, days=30)
+    await message.answer(f"Done! User {user_id} subscribed for 30 days.")
 
 @dp.callback_query(F.data.in_(["lang_ru", "lang_en"]))
 async def cb_set_lang(callback: CallbackQuery):
