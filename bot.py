@@ -179,15 +179,7 @@ async def cb_set_lang(callback: CallbackQuery):
     lang = callback.data.split("_")[1]
     await set_lang(callback.from_user.id, lang)
     c = CONTENT[lang]
-    subscribed = await is_subscribed(callback.from_user.id)
-    if subscribed:
-        await callback.message.answer(c["start"], reply_markup=menu_keyboard(lang))
-    else:
-        await callback.message.answer(c["start"], reply_markup=menu_keyboard(lang))
-        await callback.message.answer(
-            "⭐ Чтобы открыть контент — оформи подписку:" if lang == "ru" else "⭐ To unlock content — get a subscription:",
-            reply_markup=sub_keyboard(lang)
-        )
+    await callback.message.answer(c["start"], reply_markup=menu_keyboard(lang))
     await callback.answer()
 
 @dp.callback_query(F.data == "practice")
