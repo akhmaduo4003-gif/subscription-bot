@@ -353,25 +353,24 @@ async def handle_text(message: Message):
     thinking = await message.answer(c["ai_thinking"])
     system = (
         "Ты тёплый и поддерживающий психолог-ассистент. "
-        "Отвечай коротко — максимум 3-4 абзаца. "
+        "Отвечай коротко — максимум 2-3 абзаца. "
         "Не ставь диагнозы. Не давай медицинских советов. "
         "Помогай человеку разобраться в своих чувствах и найти практические шаги. "
         "Отвечай на том же языке на котором пишет пользователь."
     )
     try:
-        response = gemini.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=system + "\n\n" + message.text
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(
+            None,
+            lambda: gemini.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=system + "\n\n" + message.text
+            )
         )
-        await thinking.delete()
-        await message.answer(response.text, reply_markup=menu_keyboard(lang))
+        await thinking.edit_text(response.text, reply_markup=menu_keyboard(lang))
     except Exception as e:
-        await thinking.delete()
-        if lang == "ru":
-            await message.answer("Что-то пошло не так. Попробуй ещё раз.", reply_markup=menu_keyboard(lang))
-        else:
-            await message.answer("Something went wrong. Please try again.", reply_markup=menu_keyboard(lang))
-
+        error_text = "Что-то пошло не так. Попробуй ещё раз." if lang == "ru" else "Something went wrong. Please try again."
+        await thinking.edit_text(error_text, reply_markup=menu_keyboard(lang))
 async def main():
     await init_db()
     await dp.start_polling(bot)
