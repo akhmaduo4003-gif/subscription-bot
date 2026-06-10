@@ -2,3 +2,4 @@ aiogram
 aiosqlite
 python-dotenv
 anthropic
+google-generativeai
