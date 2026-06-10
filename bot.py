@@ -14,7 +14,7 @@ DB = "users.db"
 
 CONTENT = {
     "ru": {
-        "start": "🧠 Психология в кармане\n\nЕжедневные практики от тревоги, выгорания и для саморазвития.\n\nС подпиской ты получаешь:\n🔹 Ежедневная практика\n🔹 Вечерний вопрос для рефлексии\n🔹 Помощь при тревоге\n🔹 Уроки по психологии\n\n400 Stars в месяц 👇",
+        "start": "🧠 Психология в кармане\n\nЕжедневные практики от тревоги, выгорания и для саморазвития.\n\nС подпиской ты получаешь:\n🔹 Ежедневная практика\n🔹 Вечерний вопрос для рефлексии\n🔹 Помощь при тревоге\n🔹 Уроки по психологии\n\n450 Stars в месяц 👇",
         "sub_btn": "⭐ Подписка 30 дней — 450 Stars",
         "only_subs": "Только для подписчиков",
         "practice_title": "💡 Практика дня:\n\n",
@@ -54,7 +54,7 @@ CONTENT = {
         ],
     },
     "en": {
-        "start": "🧠 Psychology in Pocket\n\nDaily practices for anxiety, burnout and self-development.\n\nWith subscription you get:\n🔹 Daily practice\n🔹 Evening reflection question\n🔹 Crisis help\n🔹 Psychology lessons\n\n400 Stars per month 👇",
+        "start": "🧠 Psychology in Pocket\n\nDaily practices for anxiety, burnout and self-development.\n\nWith subscription you get:\n🔹 Daily practice\n🔹 Evening reflection question\n🔹 Crisis help\n🔹 Psychology lessons\n\n450 Stars per month 👇",
         "sub_btn": "⭐ Subscribe 30 days — 450 Stars",
         "only_subs": "Subscribers only",
         "practice_title": "💡 Practice of the day:\n\n",
