@@ -6,13 +6,14 @@ from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, InlineKeyboar
 from aiogram.filters import Command
 from dotenv import load_dotenv
 import os, random
-import anthropic
+import google.generativeai as genai
 
 load_dotenv()
 bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher()
 DB = "users.db"
-claude = anthropic.Anthropic(api_key=os.getenv("CLAUDE_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+gemini = genai.GenerativeModel("gemini-1.5-flash")
 
 CONTENT = {
     "ru": {
@@ -365,14 +366,9 @@ async def handle_text(message: Message):
             "Help the person understand their feelings and find practical steps. "
             "Always reply in the same language the user writes in."
         )
-        response = claude.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=500,
-            system=system,
-            messages=[{"role": "user", "content": message.text}]
-        )
+        response = gemini.generate_content(system + "\n\n" + message.text)
         await thinking.delete()
-        await message.answer(response.content[0].text, reply_markup=menu_keyboard(lang))
+        await message.answer(response.text, reply_markup=menu_keyboard(lang))
     except Exception as e:
         await thinking.delete()
         if lang == "ru":
