@@ -219,7 +219,29 @@ async def cb_lesson(callback: CallbackQuery):
     if not await is_subscribed(callback.from_user.id):
         await callback.answer(c["only_subs"], show_alert=True)
         return
-    await callback.message.answer(c["lesson_title"] + random.choice(c["lessons"]), reply_markup=menu_keyboard(lang))
+    async with aiosqlite.connect(DB) as db:
+        async with db.execute(
+            "SELECT expires_at FROM subscribers WHERE user_id = ?", (callback.from_user.id,)
+        ) as cursor:
+            row = await cursor.fetchone()
+            start = datetime.fromisoformat(row[0]) - timedelta(days=30)
+            days_passed = (datetime.now() - start).days
+            lesson_index = min(days_passed, len(c["lessons"]) - 1)
+    lesson = c["lessons"][lesson_index]
+    total = len(c["lessons"])
+    if lang == "ru":
+        header = f"📚 Урок {lesson_index + 1} из {total}\n\n"
+        if lesson_index + 1 < total:
+            footer = f"\n\n⏳ Следующий урок откроется завтра."
+        else:
+            footer = "\n\n✅ Ты прошёл все уроки!"
+    else:
+        header = f"📚 Lesson {lesson_index + 1} of {total}\n\n"
+        if lesson_index + 1 < total:
+            footer = f"\n\n⏳ Next lesson unlocks tomorrow."
+        else:
+            footer = "\n\n✅ You completed all lessons!"
+    await callback.message.answer(header + lesson + footer, reply_markup=menu_keyboard(lang))
     await callback.answer()
 
 @dp.callback_query(F.data == "status")
