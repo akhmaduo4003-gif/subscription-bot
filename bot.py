@@ -6,14 +6,13 @@ from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, InlineKeyboar
 from aiogram.filters import Command
 from dotenv import load_dotenv
 import os, random
-import google.generativeai as genai
+from google import genai
 
 load_dotenv()
 bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher()
 DB = "users.db"
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-gemini = genai.GenerativeModel("gemini-1.5-flash")
+gemini = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 CONTENT = {
     "ru": {
@@ -366,9 +365,12 @@ async def handle_text(message: Message):
             "Help the person understand their feelings and find practical steps. "
             "Always reply in the same language the user writes in."
         )
-        response = gemini.generate_content(system + "\n\n" + message.text)
-        await thinking.delete()
-        await message.answer(response.text, reply_markup=menu_keyboard(lang))
+        response = gemini.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=system + "\n\n" + message.text
+)
+await thinking.delete()
+await message.answer(response.text, reply_markup=menu_keyboard(lang))
     except Exception as e:
         await thinking.delete()
         if lang == "ru":
