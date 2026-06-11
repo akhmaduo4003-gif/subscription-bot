@@ -363,7 +363,7 @@ async def handle_text(message: Message):
         response = await loop.run_in_executor(
             None,
             lambda: gemini.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=system + "\n\n" + message.text
             )
         )
