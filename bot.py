@@ -12,6 +12,7 @@ load_dotenv()
 bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher()
 DB = "users.db"
+chat_history = {}
 gemini = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 CONTENT = {
@@ -356,18 +357,34 @@ async def handle_text(message: Message):
         "Отвечай коротко — максимум 2-3 абзаца. "
         "Не ставь диагнозы. Не давай медицинских советов. "
         "Помогай человеку разобраться в своих чувствах и найти практические шаги. "
-        "Отвечай на том же языке на котором пишет пользователь."
+        "Отвечай на том же языке на котором пишет пользователь. "
+        "Учитывай предыдущие сообщения в разговоре и не теряй контекст."
     )
+
+    if user_id not in chat_history:
+        chat_history[user_id] = []
+
+    chat_history[user_id].append({"role": "user", "text": message.text})
+    chat_history[user_id] = chat_history[user_id][-10:]
+
+    conversation = ""
+    for msg in chat_history[user_id]:
+        role = "Пользователь" if msg["role"] == "user" else "Ассистент"
+        conversation += f"{role}: {msg['text']}\n"
+
     try:
         loop = asyncio.get_event_loop()
         response = await loop.run_in_executor(
             None,
             lambda: gemini.models.generate_content(
                 model="gemini-2.5-flash",
-                contents=system + "\n\n" + message.text
+                contents=system + "\n\nИстория разговора:\n" + conversation + "\nАссистент:"
             )
         )
-        await thinking.edit_text(response.text, reply_markup=menu_keyboard(lang))
+        reply_text = response.text
+        chat_history[user_id].append({"role": "assistant", "text": reply_text})
+        chat_history[user_id] = chat_history[user_id][-10:]
+        await thinking.edit_text(reply_text, reply_markup=menu_keyboard(lang))
     except Exception as e:
         error_text = "Что-то пошло не так. Попробуй ещё раз." if lang == "ru" else "Something went wrong. Please try again."
         await thinking.edit_text(error_text, reply_markup=menu_keyboard(lang))
