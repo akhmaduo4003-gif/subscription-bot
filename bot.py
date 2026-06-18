@@ -394,3 +394,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+    except Exception as e:
+    print(f"GEMINI ERROR: {repr(e)}")  # увидишь в логах Railway
+    error_text = "Что-то пошло не так. Попробуй ещё раз." if lang == "ru" else "Something went wrong. Please try again."
+    await thinking.edit_text(error_text, reply_markup=menu_keyboard(lang))
